@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Alert, Button, ButtonGroup, Snackbar } from "@mui/material";
 
@@ -74,7 +75,9 @@ export default function App() {
     <div style={{ width: "100%", height: 500 }}>
       <ButtonGroup style={{ paddingBottom: 5 }} variant="outlined">
         <Button onClick={handleSave}>Save</Button>
-        <Button href="/users">Go to Users</Button>
+        <Button href="/users" component={Link}>
+          Go to Users
+        </Button>
       </ButtonGroup>
 
       <Snackbar
@@ -88,7 +91,7 @@ export default function App() {
           severity="success"
           onClose={handleClose}
           action={
-            <Button href="/users" color="inherit">
+            <Button href="/users" component={Link} color="inherit">
               Go to Users
             </Button>
           }
