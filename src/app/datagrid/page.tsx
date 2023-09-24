@@ -1,28 +1,9 @@
 "use client";
 import * as React from "react";
-import {
-  DataGrid,
-  GridRowsProp,
-  GridColDef,
-  useGridApiRef,
-} from "@mui/x-data-grid";
-import {
-  Alert,
-  Button,
-  ButtonGroup,
-  Container,
-  Link as MuiLink,
-} from "@mui/material";
-import { Snackbar, IconButton } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { Alert, Button, ButtonGroup, Snackbar } from "@mui/material";
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  gender: string;
-  avatar: string;
-}
+import User from "@/types/User";
 
 function fetchRandomUsers(numberOfUsers: number = 50): Promise<User[]> {
   const new_data = fetch(
@@ -30,13 +11,16 @@ function fetchRandomUsers(numberOfUsers: number = 50): Promise<User[]> {
   )
     .then((res) => res.json())
     .then((data) => {
-      return data.map((obj: any) => ({
-        id: obj.id,
-        name: `${obj.first_name} ${obj.last_name}`,
-        email: obj.email,
-        gender: obj.gender,
-        avatar: obj.avatar,
-      }));
+      return data.map((obj: any) => {
+        const user: User = {
+          id: obj.id,
+          name: `${obj.first_name} ${obj.last_name}`,
+          email: obj.email,
+          gender: obj.gender,
+          avatar: obj.avatar,
+        };
+        return user;
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -63,22 +47,20 @@ export default function App() {
       return;
     }
 
-    const selected = Array.from(apiRef.current.getSelectedRows().values());
+    const selectedUsers = Array.from(apiRef.current.getSelectedRows().values());
     const savedUsers = JSON.parse(
       window.sessionStorage.getItem("saved_users") || "[]"
     );
 
     window.sessionStorage.setItem(
       "saved_users",
-      JSON.stringify([...savedUsers, ...selected])
+      JSON.stringify([...savedUsers, ...selectedUsers])
     );
 
-    setOpenSnackbar(true);
+    selectedUsers.length && setOpenSnackbar(true);
   }
-  function handleClose(event?: React.SyntheticEvent | Event, reason?: string) {
-    if (reason === "clickaway") {
-      return;
-    }
+
+  function handleClose() {
     setOpenSnackbar(false);
   }
 
@@ -98,11 +80,11 @@ export default function App() {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={5000}
-        onClose={(event, reason) => handleClose(event, reason)}
+        onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
-          variant="filled"
+          variant="outlined"
           severity="success"
           onClose={handleClose}
           action={
