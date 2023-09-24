@@ -77,7 +77,11 @@ export default function RootLayout({
             <List>
               {LINKS.map(({ text, href, icon: Icon }) => (
                 <ListItem key={href} disablePadding>
-                  <ListItemButton component={Link} href={href}>
+                  <ListItemButton
+                    component={Link}
+                    href={href}
+                    disabled={text === "Home" ? true : false}
+                  >
                     <ListItemIcon>
                       <Icon />
                     </ListItemIcon>
@@ -90,7 +94,7 @@ export default function RootLayout({
             <List>
               {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
                 <ListItem key={text} disablePadding>
-                  <ListItemButton>
+                  <ListItemButton disabled>
                     <ListItemIcon>
                       <Icon />
                     </ListItemIcon>
